@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'FrutaController@index')->name('fruta.home');
 Route::get('/fruta/create', 'FrutaController@create')->name('fruta.create');
 Route::post('/fruta/store', 'FrutaController@store')->name('fruta.store');
+Route::get('/fruta/list', 'FrutaController@fruitList')->name('fruta.list');
+
+Route::resource('venda', 'VendaController');

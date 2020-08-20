@@ -28,7 +28,7 @@
                         <a class="nav-link" href="{{ route('fruta.create') }}">Cadastrar Fruta</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="#">Área de venda</a>
+                        <a class="nav-link" href="{{ route('venda.index') }}">Área de venda</a>
                     </li>
                   </ul>
                 </div>

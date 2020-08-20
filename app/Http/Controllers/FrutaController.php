@@ -37,4 +37,21 @@ class FrutaController extends Controller
             ]);
         }
     }
+
+    public function fruitList(Request $request)
+    {
+        try {
+            $search = $request->get('search') ?? null;
+
+            $frutas = Fruta::where('nome', 'like', "%$search%")
+                ->select('id', 'nome as text')->get();
+
+            return response()->json($frutas, 200);
+            // dd($frutas, $request->all());
+        } catch (Throwable $th) {
+            LogError::registerLog($th);
+
+            return response()->json([], 500);
+        }
+    }
 }
