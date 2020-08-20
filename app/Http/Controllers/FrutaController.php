@@ -47,7 +47,6 @@ class FrutaController extends Controller
                 ->select('id', 'nome as text')->get();
 
             return response()->json($frutas, 200);
-            // dd($frutas, $request->all());
         } catch (Throwable $th) {
             LogError::registerLog($th);
 

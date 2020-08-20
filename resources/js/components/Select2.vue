@@ -1,6 +1,5 @@
 <template>
-    <select :name="name" :id="id">
-    </select>
+    <select :name="name" :id="id"></select>
 </template>
 
 <script>
@@ -39,7 +38,6 @@
                     },
 
                     processResults: function (data) {
-                        console.log(data);
                         return {
                             results: data
                         };

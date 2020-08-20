@@ -1991,7 +1991,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     id: {
@@ -2022,7 +2021,6 @@ __webpack_require__.r(__webpack_exports__);
           return query;
         },
         processResults: function processResults(data) {
-          console.log(data);
           return {
             results: data
           };
