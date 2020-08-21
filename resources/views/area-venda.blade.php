@@ -8,7 +8,7 @@
             <h1>Venda</h1>
         </div>
 
-        <venda route="{{ route('fruta.list') }}"></venda>
+        <venda route="{{ route('venda.store') }}" fruit-route="{{ route('fruta.list') }}"></venda>
 
         {{-- <div>
             {!! Form::open(['route' => 'venda.store']) !!}

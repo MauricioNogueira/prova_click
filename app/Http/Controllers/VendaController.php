@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogError;
 use Illuminate\Http\Request;
+use App\Services\VendaService;
+use App\Services\ClienteService;
+use Illuminate\Support\Facades\DB;
 
 class VendaController extends Controller
 {
@@ -34,7 +38,33 @@ class VendaController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        try {
+            DB::beginTransaction();
+
+            $resultVenda = VendaService::store($request->vendas);
+            $resultCliente = ClienteService::store($request->cliente);
+
+            if (!$resultVenda || !$resultCliente) {
+                DB::rollBack();
+
+                return response()->json([
+                    'message' => 'Desculpe, não foi possível efetuar a compra'
+                ], 500);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Obrigado pela preferência :D'
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            LogError::registerLog($th);
+
+            return response()->json([
+                'message' => 'Falha interna ao efetuar compra'
+            ], 500);
+        }
     }
 
     /**

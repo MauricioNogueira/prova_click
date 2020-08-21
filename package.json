@@ -24,6 +24,8 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "select2": "4.0.13"
+        "select2": "4.0.13",
+        "v-mask": "^2.2.3",
+        "v-money": "^0.8.1"
     }
 }

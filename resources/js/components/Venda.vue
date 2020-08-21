@@ -18,8 +18,8 @@
                     <tr v-else :key="index" v-for="(fruta, index) in frutas">
                         <td>{{ fruta.nome }}</td>
                         <td>{{ fruta.quantidade }}</td>
-                        <td>{{ fruta.valor_unitario }}</td>
-                        <td>{{ fruta.valor_total }}</td>
+                        <td>R$ {{ parseFloat(fruta.valor_unitario).toFixed(2) }}</td>
+                        <td>R$ {{ parseFloat(fruta.valor_total).toFixed(2) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -37,17 +37,17 @@
             <div class="row">
                 <div class="col-md-4">
                     <label for="fruta">Fruta</label>
-                    <select2 v-on:setvalue="valorSelect" class="form-control" :route="route" id="fruta" name="fruta"></select2>
+                    <select2 v-on:setvalue="valorSelect" class="form-control" :route="fruitRoute" id="fruta" name="fruta"></select2>
                 </div>
 
                 <div class="col-md-4">
                     <label for="fruta">Quantidade</label>
-                    <input v-model="fields.quantidade" class="form-control" type="text" name="quantidade" id="quantidade_venda">
+                    <input v-model="fields.quantidade" class="form-control" type="text" name="quantidade" id="quantidade_venda" />
                 </div>
 
                 <div class="col-md-4">
                     <label for="fruta">Valor</label>
-                    <input v-model="fields.valor" class="form-control" type="number" name="valor_venda" id="valor_venda">
+                    <money v-model="fields.valor" v-bind="money" class="form-control" name="valor_venda" id="valor_venda"></money>
                 </div>
 
             </div>
@@ -61,29 +61,36 @@
                 <div class="row">
                     <div class="col-md-4">
                         <label for="nome_cliente">Nome do cliente</label>
-                        <input v-model="this.cliente.nome" class="form-control" type="text" name="nome_cliente" id="nome_cliente">
+                        <input v-model="cliente.nome" class="form-control" type="text" name="nome_cliente" id="nome_cliente" />
                     </div>
 
                     <div class="col-md-4">
                         <label for="cpf">CPF</label>
-                        <input v-model="this.cliente.cpf" class="form-control" type="text" name="cpf" id="cpf">
+                        <input v-model="cliente.cpf" v-mask="'###.###.###-##'" class="form-control" type="text" name="cpf" id="cpf">
                     </div>
 
                     <div class="col-md-4">
                         <label for="valor_gasto">Valor a pagar</label>
-                        <input v-model="this.cliente.valor_gasto" class="form-control" type="text" name="valor_gasto" id="valor_gasto">
+                        <money readonly class="form-control" v-bind="money" name="valor_gasto" id="valor_gasto" :value="total"></money>
                     </div>
                 </div>
 
-                <button @click="comprar" class="btn btn-success">Efetuar compra</button>
+                <button @click="comprar" class="btn btn-success mt-2">Efetuar compra</button>
             </form>
         </section>
     </div>
 </template>
 
 <script>
+    import {VMoney} from 'v-money';
+
     export default {
         props: {
+            fruitRoute: {
+                type: String,
+                required: true
+            },
+
             route: {
                 type: String,
                 required: true
@@ -96,20 +103,28 @@
                 cliente: {
                     nome: null,
                     cpf: null,
-                    valor_gasto: null
+                    valor_gasto: 0
                 },
                 fields: {
                     fruta: null,
-                    valor_unitario: null,
-                    valor_total: null,
+                    valor: 0,
                     quantidade: null
                 },
                 pedido: true,
                 totalAPagar: 0,
                 statusCompra: 'Aberto',
-                bgBadge: 'success'
+                bgBadge: 'success',
+                money: {
+                    decimal: ',',
+                    thousands: '.',
+                    prefix: 'R$ ',
+                    suffix: '',
+                    precision: 2,
+                }
             }
         },
+
+        directives: {money: VMoney},
 
         computed: {
             frutas() {
@@ -136,7 +151,7 @@
         methods: {
             adicionar() {
                 if (this.fields.fruta && this.fields.quantidade && this.fields.valor) {
-                    let valorTotal = this.fields.quantidade * this.fields.valor;
+                    let valorTotal = (this.fields.quantidade * this.fields.valor);
                     this.totalAPagar += valorTotal;
                     $('#fruta').val(null).trigger('change');
 
@@ -169,12 +184,44 @@
 
             limpaCampos() {
                 this.fields.fruta = null;
-                this.fields.valor = null;
+                this.fields.valor = 0;
                 this.fields.quantidade = null;
             },
 
-            comprar() {
-                alert("Finalizando compra");
+            async comprar(e) {
+                e.preventDefault();
+                
+                if (this.cliente.nome && this.cliente.cpf) {
+                    this.cliente.valor_gasto = this.total;
+
+                    await axios.post(this.route, {
+                        vendas: this.listaCompras,
+                        cliente: this.cliente
+                    })
+                    .then(response => {
+                        alert(response.data.message);
+                        this.start();
+                    })
+                    .catch(error => {
+                        alert(error.response.data.message);
+                    })
+                    .finally(() => {
+                        console.log("Fim da compra");
+                    })
+                } else {
+                    alert("Dados do cliente precisa ser preenchido");
+                }
+            },
+
+            start() {
+                this.bgBadge = 'success';
+                this.statusCompra = 'Aberto';
+                this.pedido = true;
+                this.totalAPagar = 0;
+                this.listaCompras = [];
+
+                this.cliente.nome = null;
+                this.cliente.cpf = null;
             }
         },
 

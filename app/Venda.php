@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Venda extends Model
 {
-    //
+    protected $fillable = [
+        'quantidade_fruta',
+        'valor',
+        'data'
+    ];
 }

@@ -11,6 +11,11 @@ window.Vue = require('vue');
 window.$ = require('jquery');
 window.select2 = require('select2');
 
+import VueMask from 'v-mask';
+import money from 'v-money'
+Vue.use(VueMask);
+Vue.use(money, {precision: 4});
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
