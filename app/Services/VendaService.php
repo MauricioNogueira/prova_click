@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Fruta;
 use App\Venda;
 use Throwable;
+use App\Cliente;
 use App\Helpers\LogError;
 
 class VendaService
@@ -53,6 +54,31 @@ class VendaService
             $receita = Venda::all()->sum('valor');
 
             return $receita;
+        } catch (\Throwable $th) {
+            LogError::registerLog($th);
+
+            return [];
+        }
+    }
+
+    public static function getVendas()
+    {
+        try {
+            $listagem = [];
+            $clientes = Cliente::all()->toArray();
+            $vendas = Venda::all()->toArray();
+
+            foreach ($clientes as $key => $cliente) {
+                array_push($listagem, [
+                    'nome' => $cliente['nome'],
+                    'cpf' => $cliente['cpf'],
+                    'quantidade' => $vendas[$key]['quantidade_fruta'],
+                    'total_gasto' => $cliente['valor_gasto'],
+                    'data_compra' => $cliente['data_compra']
+                ]);
+            }
+
+            return $listagem;
         } catch (\Throwable $th) {
             LogError::registerLog($th);
 

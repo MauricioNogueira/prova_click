@@ -19,4 +19,6 @@ Route::post('/fruta/store', 'FrutaController@store')->name('fruta.store');
 Route::get('/fruta/list', 'FrutaController@fruitList')->name('fruta.list');
 
 Route::get('/venda/receita', 'VendaController@receita')->name('venda.receita');
+Route::get('/venda/listagem', 'VendaController@listagem')->name('venda.listagem');
+Route::get('/venda/vendidos', 'VendaController@getVendas')->name('venda.vendidos');
 Route::resource('venda', 'VendaController');

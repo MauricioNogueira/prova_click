@@ -128,4 +128,24 @@ class VendaController extends Controller
             ], 500);
         }
     }
+
+    public function listagem()
+    {
+        return view('listagem-venda');
+    }
+
+    public function getVendas()
+    {
+        try {
+            $listagem = VendaService::getVendas();
+
+            return response()->json($listagem, 200);
+        } catch (\Throwable $th) {
+            LogError::registerLog($th);
+
+            return response()->json([
+                'message' => 'Erro ao buscar dados das vendas'
+            ], 500);
+        }
+    }
 }
