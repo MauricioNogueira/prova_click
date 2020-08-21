@@ -51,8 +51,6 @@
             async getVendas() {
                 const {data} = await axios.get(this.route);
 
-                console.log(data)
-
                 this.vendas = data;
             }
         },
