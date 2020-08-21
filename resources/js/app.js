@@ -25,6 +25,7 @@ window.select2 = require('select2');
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('card', require('./components/Card.vue').default);
 Vue.component('select2', require('./components/Select2.vue').default);
+Vue.component('venda', require('./components/Venda.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

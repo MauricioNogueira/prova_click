@@ -8,7 +8,9 @@
             <h1>Venda</h1>
         </div>
 
-        <div>
+        <venda route="{{ route('fruta.list') }}"></venda>
+
+        {{-- <div>
             {!! Form::open(['route' => 'venda.store']) !!}
             {!! Form::close() !!}
         </div>
@@ -18,6 +20,6 @@
                 {!! Form::label('fruta', 'Nome da fruta') !!}
                 <select2 route="{{ route('fruta.list') }}" id="fruta" name="fruta"></select2>
             </div>
-        </div>
+        </div> --}}
     </div>
 @endsection

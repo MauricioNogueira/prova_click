@@ -43,7 +43,9 @@
                         };
                     }
                 }
-            });
+            }).on('select2:select', (e) => {
+                this.$emit('setvalue', e.params.data);
+            })
         },
     }
 </script>
