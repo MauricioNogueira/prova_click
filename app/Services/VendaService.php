@@ -16,22 +16,28 @@ class VendaService
             $vendas = collect($vendas)->keyBy('nome')->toArray();
 
             $frutas = Fruta::whereIn('nome', $nomeFrutas)->get();
-            
+
+            $quantidadeTotal = 0;
+            $valorTotal = 0;
+
             foreach ($vendas as $key => $venda) {
                 $fruta = $frutas->where('nome', $key)->first();
+                $valorTotal += $venda['valor_total'];
+
                 if ($fruta->quantidade >= intval($venda['quantidade'])) {
                     $fruta->quantidade -= intval($venda['quantidade']);
                     $fruta->save();
 
-                    Venda::create([
-                        'quantidade_fruta' => $venda['quantidade'],
-                        'valor' => $venda['valor_total'],
-                        'data' => date('Y-m-d')
-                    ]);
+                    $quantidadeTotal += intval($venda['quantidade']);
                 } else {
                     return false;
                 }
             }
+            Venda::create([
+                'quantidade_fruta' => $valorTotal,
+                'valor' => $quantidadeTotal,
+                'data' => date('Y-m-d')
+            ]);
 
             return true;
         } catch (Throwable $th) {
