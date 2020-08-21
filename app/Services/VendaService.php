@@ -34,8 +34,8 @@ class VendaService
                 }
             }
             Venda::create([
-                'quantidade_fruta' => $valorTotal,
-                'valor' => $quantidadeTotal,
+                'quantidade_fruta' => $quantidadeTotal,
+                'valor' => $valorTotal,
                 'data' => date('Y-m-d')
             ]);
 
@@ -44,6 +44,19 @@ class VendaService
             LogError::registerLog($th);
 
             return false;
+        }
+    }
+
+    public static function getReceita()
+    {
+        try {
+            $receita = Venda::all()->sum('valor');
+
+            return $receita;
+        } catch (\Throwable $th) {
+            LogError::registerLog($th);
+
+            return [];
         }
     }
 }

@@ -8,6 +8,6 @@
             <h1>Dashboard</h1>
         </div>
 
-        <card header="Cartao" title="Novo cartao" text="Qualquer coisa vem aqui neste card"></card>
+        <dashboard route-total-ganho="{{ route('venda.receita') }}" fruit-route="{{ route('fruta.list') }}"></dashboard>
     </div>
 @endsection

@@ -111,4 +111,21 @@ class VendaController extends Controller
     {
         //
     }
+
+    public function receita()
+    {
+        try {
+            $total = VendaService::getReceita();
+
+            return response()->json([
+                'total' => $total
+            ], 200);
+        } catch (\Throwable $th) {
+            LogError::registerLog($th);
+
+            return response()->json([
+                'message' => 'Falha ao buscar dados da receita'
+            ], 500);
+        }
+    }
 }
