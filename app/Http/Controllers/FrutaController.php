@@ -44,7 +44,7 @@ class FrutaController extends Controller
             $search = $request->get('search') ?? null;
 
             $frutas = Fruta::where('nome', 'like', "%$search%")
-                ->select('id', 'nome as text')->get();
+                ->select('id', 'nome as text', 'quantidade')->get();
 
             return response()->json($frutas, 200);
         } catch (Throwable $th) {

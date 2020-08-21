@@ -40,9 +40,14 @@
                     <select2 v-on:setvalue="valorSelect" class="form-control" :route="fruitRoute" id="fruta" name="fruta"></select2>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <label for="fruta">Quantidade</label>
                     <input v-model="fields.quantidade" class="form-control" type="text" name="quantidade" id="quantidade_venda" />
+                </div>
+
+                <div class="col-md-2">
+                    <label for="fruta">Quantidade no estoque</label>
+                    <input readonly v-model="estoque" class="form-control" type="text" id="quantidade_estoque" />
                 </div>
 
                 <div class="col-md-4">
@@ -120,7 +125,9 @@
                     prefix: 'R$ ',
                     suffix: '',
                     precision: 2,
-                }
+                },
+
+                totalEstoque: null
             }
         },
 
@@ -145,6 +152,10 @@
 
             total() {
                 return this.totalAPagar.toFixed(2);
+            },
+
+            estoque() {
+                return this.totalEstoque;
             }
         },
 
@@ -179,6 +190,14 @@
             },
 
             valorSelect(fruta) {
+                this.totalEstoque = fruta.quantidade;
+
+                if (fruta.quantidade == 0) {
+                    document.getElementById('quantidade_venda').setAttribute('disabled', true);
+                } else {
+                    document.getElementById('quantidade_venda').removeAttribute('disabled');
+                }
+
                 this.fields.fruta = fruta.text;
             },
 
@@ -186,6 +205,7 @@
                 this.fields.fruta = null;
                 this.fields.valor = 0;
                 this.fields.quantidade = null;
+                this.totalEstoque = null;
             },
 
             async comprar(e) {
